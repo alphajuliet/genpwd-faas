@@ -3,8 +3,9 @@
 * @param {string} name Who you're saying hello to
 * @returns {string}
 */
+
+const g = require('../src/genpwd'); 
+
 module.exports = (name = 'world', context, callback) => {
-
-  callback(null, `hello ${name}`);
-
+  callback(null, `Hello, ${name}.`);
 };

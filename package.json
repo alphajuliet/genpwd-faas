@@ -1,10 +1,12 @@
 {
   "name": "genpwd",
-  "version": "0.0.0",
-  "description": "",
-  "author": "alphajuliet <web@alphajuliet.com>",
+  "version": "0.0.1",
+  "description": "GenPwd as FaaS",
+  "author": "AndrewJ",
   "main": "functions/__main__.js",
-  "dependencies": {},
+  "dependencies": {
+    "ramda": "^0.25.0"
+  },
   "private": true,
   "stdlib": {
     "build": "faaslang",
