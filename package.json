@@ -1,6 +1,6 @@
 {
   "name": "genpwd",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "GenPwd as FaaS",
   "author": "AndrewJ",
   "main": "functions/__main__.js",
