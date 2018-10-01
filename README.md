@@ -9,8 +9,7 @@ It is currently deployed at `https://alphajuliet.lib.id/genpwd/`.
 
 The function call has five parameters, all optional with defaults.
 
-* `genId`: a number that selects the generator to use, currently between 0 and
-3. Default is 3.
+* `genId`: a number that selects the generator to use, currently between 0 and 3. Default is 3.
 * `nwords`: the number of random words to return. Default is 10.
 * `punctuation`: adds punctuation if 1, otherwise no. Default is 0.
 * `capitals`: adds capital letters if 1, otherwise no. Default is 0.
