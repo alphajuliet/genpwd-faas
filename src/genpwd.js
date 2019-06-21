@@ -26,14 +26,22 @@ const Info = {
   }
 };
 
+// Available generators
+const generatorList = [
+  { id: 0, name: "Generator 0" },
+  { id: 1, name: "Generator 1" },
+  { id: 2, name: "Generator 2" },
+  { id: 3, name: "Markov", default: true }
+]
+
 // Generate a list of random words from the chosen generator.
-const generate = (genId = 0, nwords = 10, options = {}) => {
+const generate = (genId = 3, nwords = 10, options = {}) => {
   return R.map(() => gen[genId].randomWord(options), 
                R.range(0, nwords));
 };
 
 exports.info = Info;
-exports.numberOfGenerators = gen.length;
+exports.generators = generatorList;
 exports.generate = generate;
 
 // The End
