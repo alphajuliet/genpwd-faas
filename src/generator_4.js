@@ -3,13 +3,13 @@
 // Markov chain generator
 // aj
 
-const R = require('ramda');
-const G = require('./gen_common');
+const R = require('ramda')
+const G = require('./gen_common')
 
 // Generated Markov transition matrix for the given set.
-const allLetters = [' ', '_', "'", 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'];
+const allLetters = [' ', '_', "'", 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z']
 
-const tr = [
+const trMatrix = [
   [ 0.0001661183,0,0.001012786,0.1211592,0.04469118,0.03657282,0.02942973,0.01811225,0.03810004,0.01722272,0.06422884,0.07750222,0.002545361,0.005792706,0.02441939,0.05296494,0.01820335,0.06261052,0.02634315,0.002180972,0.0217347,0.07929201,0.1634068,0.01310727,0.007486041,0.06366618,0.0003590299,0.007630724,5.89452e-05],
   [ 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0],
   [ 0.5013193,0,0,0.01846966,0.01583113,0.0237467,0.03166227,0.005277045,0.005277045,0.002638522,0.06860158,0.04221636,0,0,0.01583113,0.03430079,0.03166227,0.005277045,0.02638522,0,0.005277045,0.02110818,0.06596306,0,0.002638522,0.02902375,0,0.0474934,0],
@@ -39,62 +39,52 @@ const tr = [
   [ 0.1414063,0,0,0.06953125,0,0.1414063,0,0.0625,0.00546875,0,0.0171875,0.0859375,0,0,0.0015625,0,0,0.00234375,0.2226562,0.003125,0,0,0.1890625,0.01796875,0.01875,0,0.01875,0.00234375,0],
   [ 0.7707597,0,0.0004001868,0.00693657,0.004068565,0.003268192,0.0004001868,0.05295805,0.001133862,0.0002000934,0.0006669779,0.0180084,0,0,0.008203828,0.003735076,0.001067165,0.07690255,0.001600747,0,0.002601214,0.03781765,0.007603548,0,0.0005335823,0.001133862,0,0,0],
   [ 0.02325581,0,0,0.03488372,0,0,0,0.5232558,0,0,0,0.09302326,0,0,0.1046512,0,0,0.05581395,0,0,0,0,0,0,0,0,0,0.04186047,0.1232558],
-];
+]
 
 // Return a random next letter, given the transition matrix
-// nextLetter :: Char -> [Char] -> [[Float]] -> Char
+// nextLetter :: [[Float]] -> [Char] -> Char -> Char
 let nextLetter = (tr_matrix, symbols, ltr) => {
-  const row_index = R.indexOf(ltr, symbols);
-  const row = tr_matrix[row_index];
+  const row_index = R.indexOf(ltr, symbols)
+  const row = tr_matrix[row_index]
 
   // Round the probabilities to splits across 200
-  const roundToInt = (n) => Math.round(n, 1);
-  const int_row = R.map(R.compose(roundToInt, R.multiply(200)), row);
+  const roundToInt = (n) => Math.round(n, 1)
+  const int_row = R.map(
+                    R.compose(roundToInt, R.multiply(200)), 
+                    row)
 
   // Generate a bag of letters and pick one
-  const listf = G.WeightedList(R.zipObj(symbols, int_row));
-  return listf();
+  const listf = G.WeightedList(R.zipObj(symbols, int_row))
+  return listf()
 };
 
-// Pre-calculate all the weighted lists
-// var allLists = R.map(nextLetter(symbols, tr_matrix), symbols)
-
 // Generate a random word of a minimum and maximum length
-var randomWord = (opts) => {
+const randomWord = (maxChar = 6, opts = {}) => {
 
   // puncF :: Map String Boolean -> (() -> String)
-  let puncF = opts["punctuation"] ? G.RandomList(G.symbols) : G.emptyStringF;
+  let puncF = opts["punctuation"] ? G.RandomList(G.symbols) : G.emptyStringF
   // numF  :: Map String Boolean -> Integer -> (() -> String)
-  let numF  = n => opts["numbers"] ? G.randomNumericString(n) : G.emptyStringF;
+  let numF  = n => opts["numbers"] ? G.randomNumericString(n) : G.emptyStringF
   // capF  :: Map String Boolean -> (() -> String) -> (() -> String)
-  let capF  = f => opts["capitals"] ? R.compose(G.capitalise, f) : f;
+  let capF  = f => opts["capitals"] ? R.compose(G.capitalise, f) : f
 
-  // word :: () -> String
-  var word = () => {
-    const minLength = 5;
-    const maxLength = 7;
-    var w = '';
-    var letter;
-
+  // word :: Int -> String
+  const word = () => {
+    let w = G.RandomList(R.slice(3, 29, allLetters))()
     do {
-      letter = G.RandomList(R.slice(3, 29, allLetters))();
-      w = letter;
-      do {
-        letter = nextLetter(tr, allLetters, letter);
-        w = w + letter;
-      } while (letter != ' ' && w.length < maxLength);
-      w = R.trim(w);
-    } while (w.length < minLength);
-    return w;
+      w = w + nextLetter(trMatrix, allLetters, R.last(w))
+      w = R.replace(/ /g, '', w)  // Remove any spaces
+    } while (w.length < maxChar)
+    return R.join('-', R.splitEvery(6, w)) // Insert a hyphen after every 6 chars
   }
 
   let f = (G.dice(2) < 1) ? 
     [capF(word), puncF, numF(3)] :
-    [numF(3), puncF, capF(word)];
+    [numF(3), puncF, capF(word)]
 
-  return G.crunch(f);
-};
+  return G.crunch(f)
+}
 
-exports.randomWord = randomWord;
+exports.randomWord = randomWord
 
 // The End
