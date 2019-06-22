@@ -31,7 +31,7 @@ const vs = G.WeightedList(
   {"a":1,"e":1,"i":1,"o":1});
 
 
-var randomWord = (minChar, opts = {}) => {
+var randomWord = (strength = 0, opts = {}) => {
 
   // puncF :: Map String Boolean -> (() -> String)
   let puncF = opts["punctuation"] ? G.RandomList(symbols) : G.emptyStringF;

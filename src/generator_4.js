@@ -59,7 +59,19 @@ let nextLetter = (tr_matrix, symbols, ltr) => {
 };
 
 // Generate a random word of a minimum and maximum length
-const randomWord = (maxChar = 6, opts = {}) => {
+const randomWord = (strength = 0, opts = {}) => {
+
+  switch (strength) {
+    case 0: 
+      minChar = 6; break
+    case 1:
+      minChar = 12; break
+    case 2:
+      minChar = 18; break
+    default:
+      minChar = 6
+  }
+
 
   // puncF :: Map String Boolean -> (() -> String)
   let puncF = opts["punctuation"] ? G.RandomList(G.symbols) : G.emptyStringF
@@ -74,7 +86,7 @@ const randomWord = (maxChar = 6, opts = {}) => {
     do {
       w = w + nextLetter(trMatrix, allLetters, R.last(w))
       w = R.replace(/ /g, '', w)  // Remove any spaces
-    } while (w.length < maxChar)
+    } while (w.length < minChar)
     return R.join('-', R.splitEvery(6, w)) // Insert a hyphen after every 6 chars
   }
 

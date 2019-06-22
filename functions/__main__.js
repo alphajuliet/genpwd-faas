@@ -1,6 +1,7 @@
 /**
 * GenPwd as a FaaS.
 * @param {Number} genId The generator to use.
+* @param {Number} strength The strength of the desired passwords.
 * @param {Number} nwords Number of words to generate.
 * @param {Number} punctuation Include punctuation in generated words.
 * @param {Number} capitals Include capitals.
@@ -12,6 +13,7 @@ const g = require('../src/genpwd');
 
 module.exports = (
   genId = 3, 
+  strength = 0,
   nwords = 10, 
   punctuation = 0, 
   capitals = 0, 
@@ -22,5 +24,5 @@ module.exports = (
       capitals: (capitals == 1), 
       numbers: (numbers == 1) 
     };
-  callback(null, g.generate(genId = genId, nwords = nwords, options = opts));
+  callback(null, g.generate(genId = genId, strength = strength, nwords = nwords, options = opts));
 };

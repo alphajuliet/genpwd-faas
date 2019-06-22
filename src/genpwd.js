@@ -35,8 +35,8 @@ const generatorList = [
 ]
 
 // Generate a list of random words from the chosen generator.
-const generate = (genId = 3, nwords = 10, options = {}) => {
-  return R.map(() => gen[genId].randomWord(12, options), 
+const generate = (genId = 3, strength = 0, nwords = 10, options = {}) => {
+  return R.map(() => gen[genId].randomWord(strength, options), 
                R.range(0, nwords));
 };
 
