@@ -18,7 +18,7 @@ const n = G.WeightedList(
 var randomWord = (strength = 0, opts = {}) => {
 
   // puncF :: Map String Boolean -> (() -> String)
-  let puncF = opts["punctuation"] ? G.RandomList(symbols) : G.emptyStringF;
+  let puncF = opts["punctuation"] ? G.RandomList(G.symbols) : G.emptyStringF;
   // numF  :: Map String Boolean -> Integer -> (() -> String)
   let numF  = n => opts["numbers"] ? G.randomNumericString(n) : G.emptyStringF;
   // capF  :: Map String Boolean -> (() -> String) -> (() -> String)
