@@ -1,0 +1,6 @@
+{
+  "name": "alphajuliet/genpwd",
+  "version": "0.0.6",
+  "timeout": 10000,
+  "build": "fasslang"
+}
